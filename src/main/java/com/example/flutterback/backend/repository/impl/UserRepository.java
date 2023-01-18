@@ -30,5 +30,31 @@ public class UserRepository implements IUserRepository {
 		String query = "SELECT * FROM tb_user";
 		return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(User.class));
     }
+
+    @Override
+    public User updateUser(int id, User user) {
+      String query = "UPDATE tb_user SET nama = ?, email = ?, gender = ? WHERE id = ?";
+      
+      jdbcTemplate.update(query, new Object[] {user.getNama(), user.getEmail(), user.getGender(), id});
+      return user;
+    }
+
+    @Override
+    public User deleteUser(int id) {
+		String query = "SELECT * FROM tb_user WHERE id = ?";
+		var result = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(User.class), id);
+		
+		query = "DELETE FROM tb_user WHERE id = ?";
+		jdbcTemplate.update(query, id);
+		
+		return result;
+    }
+
+    @Override
+    public User updateGetId(int id) {
+      String query = "SELECT * FROM tb_user WHERE id = ?";
+      var result = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(User.class), id);
+      return result;
+    }
     
 }
